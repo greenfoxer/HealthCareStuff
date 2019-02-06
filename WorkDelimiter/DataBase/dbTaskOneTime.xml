@@ -1,0 +1,18 @@
+﻿<TasksOneTime>
+    <TaskOneTime
+    id="1"
+    name="test3"
+    creationDate="2019-01-25T09:40:02.240"
+    signalDate="2019-10-10T00:00:00"
+    isRegular="1"
+    isActual="1"
+    />
+  <TaskOneTime
+    id="2"
+    name="test4"
+    creationDate="2019-01-25T09:40:02.240"
+    signalDate="2019-10-10T00:00:00"
+    isRegular="1"
+    isActual="1"
+    />
+</TasksOneTime>

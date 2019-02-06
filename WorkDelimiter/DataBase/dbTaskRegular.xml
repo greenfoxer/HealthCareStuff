@@ -1,0 +1,20 @@
+﻿<TasksRegular>
+  <TaskRegular
+    id="1"
+    name="test"
+    creationDate="2019-01-25T09:33:33.460"
+    period="15"
+    isRegular="1"
+    delimiter="5"
+    isActual="1"
+  />
+  <TaskRegular
+    id="2"
+    name="test2"
+    creationDate="2019-01-25T09:33:33.460"
+    period="15"
+    isRegular="1"
+    delimiter="5"
+    isActual="1"
+  />
+</TasksRegular>

@@ -1,0 +1,28 @@
+﻿<Tasks>
+  <Task>
+    <id>1</id>
+    <name>test</name>
+    <creationDate>2019-01-25T09:33:33.460</creationDate>
+    <period>15</period>
+    <isRegular>1</isRegular>
+    <delimiter>5</delimiter>
+    <isActual>1</isActual>
+  </Task>
+  <Task>
+    <id>2</id>
+    <name>test2</name>
+    <creationDate>2019-01-25T09:34:33.733</creationDate>
+    <period>15</period>
+    <isRegular>1</isRegular>
+    <delimiter>5</delimiter>
+    <isActual>1</isActual>
+  </Task>
+  <Task>
+    <id>3</id>
+    <name>test3</name>
+    <creationDate>2019-01-25T09:40:02.240</creationDate>
+    <signalDate>2019-10-10T00:00:00</signalDate>
+    <isRegular>1</isRegular>
+    <isActual>1</isActual>
+  </Task>
+</Tasks>
