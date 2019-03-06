@@ -134,6 +134,7 @@ namespace WorkDelimiter.ViewModel
         }
         void DeleteTask()
         {
+            dc.DeleteTask(SelectedTask);
             if (SelectedTask.GetType() == typeof(TaskOneTime))
             {       
                 ListOneTime.Remove((TaskOneTime)SelectedTask);

@@ -23,9 +23,17 @@ namespace WorkDelimiter.Model
 
             ListTasksRegular = DeserializeObject<TasksRegular>(dbReg);
         }
+        public void DeleteTask(ITask del)
+        {
+            if (del.GetType() == typeof(TaskOneTime))
+                ListTasksOneTime.Items = ListTasksOneTime.Items.Where(t => t.id != ((TaskOneTime)del).id).ToArray();
+            if (del.GetType() == typeof(TaskRegular))
+                ListTasksRegular.Items = ListTasksRegular.Items.Where(t => t.id != ((TaskRegular)del).id).ToArray();
+        }
         public void UpdateChange()
         {
             SerializeObject<TasksOneTime>(dbOne, ListTasksOneTime);
+            SerializeObject<TasksRegular>(dbReg, ListTasksRegular);
         }
         public void UpdateTimeRegular()
         {
