@@ -5,12 +5,12 @@
         xmlns:p="clr-namespace:WorkDelimiter"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
-        Title="Простой планировщик задач" Height="500" Width="500">
+        Title="Простой планировщик задач" Height="600" Width="600" Loaded="Window_Loaded">
     <Grid>
         <DockPanel>
             <Menu Height="25" VerticalAlignment="Top" DockPanel.Dock="Top">
                 <MenuItem Header="Задачи">
-                    <MenuItem Header="Новая задача" Command="{Binding Path=ToggleActive}"/>
+                    <MenuItem Header="Сохранить в журнал" Command="{Binding Path=ToggleActive}"/>
                 </MenuItem>
                 <MenuItem Header="Погасить">
                     <MenuItem Header="Погасить все регулярные"/>
@@ -31,32 +31,89 @@
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
                 <TextBlock  Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="Долгосрочные"/>
-                <ListBox Width="Auto" Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Path=ListOneTime}" SelectedItem="{Binding Path=SelectedTask}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <TextBlock  Text="{Binding name}" />
-                                <ToggleButton IsChecked="{Binding isActual, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Active</ToggleButton>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <TextBlock Grid.Column="1" HorizontalAlignment="Center" Grid.Row="0" Text="Регулярные"/>
-                <ListBox Width="Auto" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Path=ListRegular}" SelectedItem="{Binding Path=SelectedTask}">
+                <ListBox Width="Auto" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=ListOneTime}" SelectedItem="{Binding Path=SelectedTask}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Style.Resources>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FFF3E0"/>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
+                            </Style.Resources>
+                            <Style.Triggers>
+                                <!--<DataTrigger Binding="{Binding Path=isActual}" Value="1">
+                                    <Setter Property="ListBoxItem.Background"  Value="#4CAF50" />
+                                </DataTrigger>
+                                <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Path=isActual}" Value="0" />
+                                        <Condition Binding="{Binding Path=IsExpired}" Value="0" />
+                                </MultiDataTrigger.Conditions>
+                                    <Setter Property="ListBoxItem.Background"  Value="#F44336" />
+                                </MultiDataTrigger>-->
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Path=isActual}" Value="0" />
+                                        <Condition Binding="{Binding Path=IsExpired}" Value="1" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="ListBoxItem.Background"  Value="#F06292" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" HorizontalAlignment="Stretch">
-                                    <TextBlock  Text="{Binding name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock Text="{Binding Path=creationDate, StringFormat='{}{0:dd-MM-yyyy HH:mm}', UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBlock Text="{Binding Path=NextTime, StringFormat='{}{0:dd-MM-yyyy HH:mm}', UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBlock Text="{Binding Path=DelimiterTime, StringFormat='{}{0:dd-MM-yyyy HH:mm}', UpdateSourceTrigger=PropertyChanged}"/>
-                                </StackPanel>
-                                <ToggleButton Grid.Column="1" IsChecked="{Binding isActual, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Active</ToggleButton>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Margin="5,1,5,1" TextAlignment="Center" Text="{Binding name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="0" Grid.Row="1" Margin="5,1,5,1">Создание</TextBlock>
+                                <TextBlock Grid.Column="0" Grid.Row="2" Margin="5,1,5,1">Срабатывание</TextBlock>
+                                <TextBlock Grid.Column="1" Grid.Row="1" Margin="5,1,5,1" Text="{Binding creationDate, StringFormat='{}{0:dd-MM-yyyy HH:mm}', UpdateSourceTrigger=PropertyChanged }"/>
+                                <TextBlock Grid.Column="1" Grid.Row="2" Margin="5,1,5,1" Text="{Binding signalDate, StringFormat='{}{0:dd-MM-yyyy HH:mm}', UpdateSourceTrigger=PropertyChanged}"/>
+                                <ToggleButton Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" Margin="5,1,5,1" IsChecked="{Binding isActual, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Active</ToggleButton>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <TextBlock Grid.Column="1" HorizontalAlignment="Center" Grid.Row="0" Text="Регулярные"/>
+                <ListBox Width="Auto" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=ListRegular, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=SelectedTask}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Style.Resources>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FFF3E0"/>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
+                            </Style.Resources>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Margin="5,1,5,1" TextAlignment="Center" Text="{Binding name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="0" Grid.Row="1" Margin="5,1,5,1">Начало периода:</TextBlock>
+                                <TextBlock Grid.Column="0" Grid.Row="2" Margin="5,1,5,1">Начало перерыва:</TextBlock>
+                                <TextBlock Grid.Column="0" Grid.Row="3" Margin="5,1,5,1">Конец перерыва:</TextBlock>
+                                <TextBlock Grid.Column="1" Grid.Row="1" Margin="5,1,5,1" Text="{Binding Path=StartTime, StringFormat='{}{0:dd-MM-yyyy HH:mm}',Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Column="1" Grid.Row="2" Margin="5,1,5,1" Text="{Binding Path=DelimiterTime, StringFormat='{}{0:dd-MM-yyyy HH:mm}', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Column="1" Grid.Row="3" Margin="5,1,5,1" Text="{Binding Path=NextTime, StringFormat='{}{0:dd-MM-yyyy HH:mm}', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <ToggleButton Grid.Column="3" Grid.Row="1" Grid.RowSpan="3" Margin="5,1,5,1" IsChecked="{Binding isActual, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Active</ToggleButton>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -84,22 +141,51 @@
                         <ContentControl Content="{Binding Path=SelectedTask}">
                             <ContentControl.Resources>
                                 <DataTemplate DataType="{x:Type m:TaskOneTime}">
-                                    <StackPanel>
-                                        <TextBox Text="{Binding Path=name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <TextBlock Text="{Binding Path=creationDate, StringFormat='{}{0:dd-MM-yyyy HH:mm}', UpdateSourceTrigger=PropertyChanged}"/>
-                                        <xctk:DateTimePicker Value="{Binding Path=signalDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FormatString="MM-dd-yy hh:mm:ss tt" TimeFormat="Custom" TimeFormatString="hh:mm:ss tt"/>
-                                        <CheckBox  IsChecked="{Binding isActual, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Выполняется</CheckBox>
-                                    </StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Column="0" Grid.Row="0" Margin="5,1,5,1">Наименование</TextBlock>
+                                        <TextBlock Grid.Column="0" Grid.Row="1" Margin="5,1,5,1">Дата создания</TextBlock>
+                                        <TextBlock Grid.Column="0" Grid.Row="2" Margin="5,1,5,1">Дата сигнала</TextBlock>
+                                        <TextBlock Grid.Column="0" Grid.Row="3" Margin="5,1,5,1">Выполняется</TextBlock>
+                                        <TextBox Grid.Column="1" Grid.Row="0" Margin="5,1,5,1" Text="{Binding Path=name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock Grid.Column="1" Grid.Row="1" Margin="5,1,5,1" Text="{Binding Path=creationDate, StringFormat='{}{0:dd-MM-yyyy HH:mm}', UpdateSourceTrigger=PropertyChanged}"/>
+                                        <xctk:DateTimePicker Grid.Column="1" Grid.Row="2" Margin="5,1,5,1" Value="{Binding Path=signalDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FormatString="dd-MM-yyyy HH:mm" TimeFormat="Custom" TimeFormatString="hh:mm:ss tt"/>
+                                        <CheckBox Grid.Column="1" Grid.Row="3" Margin="5,1,5,1" IsChecked="{Binding isActual, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Выполняется</CheckBox>
+                                    </Grid>
                                 </DataTemplate>
                                 <DataTemplate DataType="{x:Type m:TaskRegular}">
-                                    <StackPanel>
-                                        <TextBox Text="{Binding Path=name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <TextBlock Text="{Binding Path=creationDate, StringFormat='{}{0:dd-MM-yyyy HH:mm}', UpdateSourceTrigger=PropertyChanged}"/>
-                                        <TextBox Text="{Binding Path=period, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <TextBox Text="{Binding Path=delimiter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <!--<xctk:DateTimePicker Value="{Binding Path=NextTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FormatString="MM-dd-yy hh:mm:ss tt" TimeFormat="Custom" TimeFormatString="hh:mm:ss tt"/>-->
-                                        <CheckBox  IsChecked="{Binding isActual, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Выполняется</CheckBox>
-                                    </StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Column="0" Grid.Row="0" Margin="5,1,5,1">Наименование</TextBlock>
+                                        <TextBlock Grid.Column="0" Grid.Row="1" Margin="5,1,5,1">Дата создания</TextBlock>
+                                        <TextBlock Grid.Column="0" Grid.Row="2" Margin="5,1,5,1">Периодичность (мин.)</TextBlock>
+                                        <TextBlock Grid.Column="0" Grid.Row="3" Margin="5,1,5,1">Перерыв</TextBlock>
+                                        <TextBlock Grid.Column="0" Grid.Row="4" Margin="5,1,5,1">Выполняется</TextBlock>
+                                        <TextBox Grid.Column="1" Grid.Row="0" Margin="5,1,5,1" Text="{Binding Path=name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock Grid.Column="1" Grid.Row="1" Margin="5,1,5,1" Text="{Binding Path=creationDate, StringFormat='{}{0:dd-MM-yyyy HH:mm}', UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Grid.Column="1" Grid.Row="2" Margin="5,1,5,1" Text="{Binding Path=period, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox  Grid.Column="1" Grid.Row="3" Margin="5,1,5,1" Text="{Binding Path=delimiter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <CheckBox Grid.Column="1" Grid.Row="4" Margin="5,1,5,1"  IsChecked="{Binding isActual, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Grid>
                                 </DataTemplate>
                             </ContentControl.Resources>
                         </ContentControl>
@@ -111,7 +197,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" Content="Save" Command="{Binding Path=AddTask}"/>
-                    <Button Grid.Column="1" Content="Decline"/>
+                    <Button Grid.Column="1" Content="Decline" Command="{Binding Path=Decline}"/>
                 </Grid>
             </Grid>
         </DockPanel>

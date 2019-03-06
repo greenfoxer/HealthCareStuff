@@ -11,26 +11,31 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Windows.Interop;
-using System.Runtime.InteropServices;
-using System.Drawing;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace WorkDelimiter.View
 {
     /// <summary>
-    /// Логика взаимодействия для TaskListView.xaml
+    /// Логика взаимодействия для AlarmView.xaml
     /// </summary>
-    public partial class TaskListView : Window
+    public partial class AlarmView : Window
     {
-        public TaskListView()
+        public AlarmView()
         {
             InitializeComponent();
         }
+        //private void closeButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.Close();
+        //}
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        //Служит для перемещения окна за заголовок формы
+        private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            this.DragMove();
         }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (Environment.OSVersion.Version.Major >= 6)

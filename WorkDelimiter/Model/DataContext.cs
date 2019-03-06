@@ -30,7 +30,7 @@ namespace WorkDelimiter.Model
         public void UpdateTimeRegular()
         {
             foreach (TaskRegular t in ListTasksRegular.Items.Where(p => p.isActual == 1))
-                t.UpdateTime();
+                t.StartTicker();
         }
         T DeserializeObject<T>(string xml)
         {

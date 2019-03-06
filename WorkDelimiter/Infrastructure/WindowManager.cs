@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Threading;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace WorkDelimiter.Infrastructure
 {
@@ -48,9 +51,28 @@ namespace WorkDelimiter.Infrastructure
             VVMs.Add(newVVMItem);
             newVVMItem.View.Show();
         }
+        public bool IsNavigationItemExist(ViewModelBase viewModel)
+        {
+            foreach (NavigationItem t in VVMs)
+            { 
+                if (t.ViewModel.ToString() ==viewModel.ToString())
+                    return true;
+            }
+            return false;
+        }
         public void ActivateWindow(ViewModelBase viewModel)
         {
 
+        }
+        public void ShowModalDialogHard(ViewModelBase viewModel)
+        {
+            NavigationItem newVVMItem = new NavigationItem(viewModel, CreateWindow(viewModel));
+            newVVMItem.View.DataContext = viewModel;
+            newVVMItem.View.Closing += viewModel.CloseNavigationElement;
+            VVMs.Add(newVVMItem);
+            newVVMItem.View.WindowStartupLocation = WindowStartupLocation.Manual;
+            newVVMItem.View.Topmost = true;
+            newVVMItem.View.ShowDialog();
         }
         public void ShowModalDialog(ViewModelBase viewModel)
         {

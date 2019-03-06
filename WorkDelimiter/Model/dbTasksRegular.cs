@@ -11,7 +11,7 @@
 using System.Xml.Serialization;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
+using System.Threading;
 namespace WorkDelimiter.Model
 {
 
@@ -169,10 +169,11 @@ namespace WorkDelimiter.Model
             set
             {
                 this.isActualField = value;
+                RaisePropertyChanged("isActual");
             }
         }
     }
-    public partial class TaskRegular : WorkDelimiter.Model.ITask
+    public partial class TaskRegular : WorkDelimiter.Model.ITask, INotifyPropertyChanged
     {
         System.DateTime _nextTime;
         public System.DateTime NextTime
@@ -183,9 +184,9 @@ namespace WorkDelimiter.Model
         System.DateTime _delimeterTime;
         public System.DateTime DelimiterTime
         { get { return _delimeterTime; } set { _delimeterTime = value; RaisePropertyChanged("DelimiterTime"); } }
-        public void UpdateTime()
+        public void UpdateTime(System.DateTime start)
         {
-            StartTime = System.DateTime.Now;
+            StartTime = start;
             DelimiterTime = StartTime.AddMinutes(period);
             NextTime = DelimiterTime.AddMinutes(delimiter);
         }
@@ -193,7 +194,26 @@ namespace WorkDelimiter.Model
         {
             creationDate = System.DateTime.Now;
         }
-
+        Thread Ticker;
+        public bool IsTick { get; set; }
+        public void StartTicker()
+        {
+            if (Ticker != null)
+                Ticker.Abort();
+            IsTick = true;
+            Ticker = new Thread(() =>
+            {
+                UpdateTime(System.DateTime.Now);
+                while (true)
+                {
+                    if(System.DateTime.Now>NextTime)
+                        UpdateTime(System.DateTime.Now);
+                    Thread.Sleep(60000);
+                }
+            });
+            Ticker.IsBackground = true;
+            Ticker.Start();
+        }
         protected void RaisePropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

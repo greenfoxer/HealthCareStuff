@@ -39,6 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -66,11 +67,17 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Infrastructure\VistaGlassHelper.cs" />
     <Compile Include="Model\DataContext.cs" />
     <Compile Include="Model\dbTasksOneTime.cs" />
     <Compile Include="Model\dbTasksRegular.cs" />
     <Compile Include="Model\ITask.cs" />
+    <Compile Include="Model\Memorizer.cs" />
+    <Compile Include="ViewModel\AlarmViewModel.cs" />
     <Compile Include="ViewModel\TaskListViewModel.cs" />
+    <Compile Include="View\AlarmView.xaml.cs">
+      <DependentUpon>AlarmView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TaskListView.xaml.cs">
       <DependentUpon>TaskListView.xaml</DependentUpon>
     </Compile>
@@ -116,6 +123,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="View\AlarmView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\TaskListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -127,14 +138,14 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DataBase\dbTaskRegular.xml">
+    <Resource Include="DataBase\dbTaskRegular.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DataBase\dbTaskOneTime.xml">
+    <Resource Include="DataBase\dbTaskOneTime.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

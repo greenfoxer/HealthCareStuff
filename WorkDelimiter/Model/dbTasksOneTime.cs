@@ -9,6 +9,8 @@
 //------------------------------------------------------------------------------
 
 using System.Xml.Serialization;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 // 
 // Этот исходный код был создан с помощью xsd, версия=4.0.30319.33440.
 // 
@@ -117,6 +119,7 @@ namespace WorkDelimiter.Model
             set
             {
                 this.signalDateField = value;
+                RaisePropertyChanged("signalDate");
             }
         }
 
@@ -145,26 +148,36 @@ namespace WorkDelimiter.Model
             set
             {
                 this.isActualField = value;
-                //RaisePropertyChanged("isActual");
+                RaisePropertyChanged("isActual");
             }
         }
-        //protected void RaisePropertyChanged(string propertyName)
-        //{
-        //    PropertyChangedEventHandler handler = PropertyChanged;
-        //    if (handler != null)
-        //    {
-        //        handler(this, new PropertyChangedEventArgs(propertyName));
-        //    }
-        //}
-
-        //public event PropertyChangedEventHandler PropertyChanged;
     }
-    public partial class TaskOneTime : WorkDelimiter.Model.ITask
+    public partial class TaskOneTime : WorkDelimiter.Model.ITask, INotifyPropertyChanged
     {
+        public byte _isExpired
+        {
+            get { if (signalDate > System.DateTime.Now) return 0; else return 1; }
+            set { }
+        }
+        public byte IsExpired 
+        {
+            get { return _isExpired; }
+            set { _isExpired = value; RaisePropertyChanged("IsExpired"); }
+        }
         public TaskOneTime()
         {
             creationDate = System.DateTime.Now;
             signalDate = System.DateTime.Now;
         }
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
